@@ -18,7 +18,7 @@ class Footnotes extends Handler {
 			let location = identifier && identifier.name;
 			if (location === "footnote") {
 				let selector = csstree.generate(rule.ruleNode.prelude);
-				this.footnotes[selector] =  {
+				this.footnotes[selector] = {
 					selector: selector,
 					policy: "auto",
 					display: "block"
@@ -32,7 +32,7 @@ class Footnotes extends Handler {
 			if (policy) {
 				let selector = csstree.generate(rule.ruleNode.prelude);
 				let note = this.footnotes[selector];
-				if(note) {
+				if (note) {
 					note.policy = policy;
 				}
 			}
@@ -40,8 +40,8 @@ class Footnotes extends Handler {
 		if (property === "footnote-display") {
 			let identifier = declaration.value.children && declaration.value.children.first();
 			let display = identifier && identifier.name;
+			let selector = csstree.generate(rule.ruleNode.prelude);
 			if (display && this.footnotes[selector]) {
-				let selector = csstree.generate(rule.ruleNode.prelude);
 				let note = this.footnotes[selector];
 				if (note) {
 					note.display = display;
@@ -49,11 +49,10 @@ class Footnotes extends Handler {
 			}
 		}
 	}
-	
 
 	onPseudoSelector(pseudoNode, pItem, pList, selector, rule) {
 		let name = pseudoNode.name;
-		if (name === "footnote-marker" ) {
+		if (name === "footnote-marker") {
 			// switch ::footnote-marker to [data-footnote-marker]::before
 			let prelude = rule.ruleNode.prelude;
 			let newPrelude = new csstree.List();
@@ -63,7 +62,7 @@ class Footnotes extends Handler {
 				if (node.type !== "PseudoElementSelector") {
 					newPrelude.appendData(node);
 				}
-			})
+			});
 
 			// newPrelude.appendData({
 			// 	type: "WhiteSpace",
@@ -106,7 +105,7 @@ class Footnotes extends Handler {
 				if (node.type !== "PseudoElementSelector") {
 					newPrelude.appendData(node);
 				}
-			})
+			});
 
 			// Add our data call
 			newPrelude.appendData({
@@ -170,7 +169,7 @@ class Footnotes extends Handler {
 
 			prevElement = element;
 			element = element.parentElement;
-			
+
 			// If no containers were found and there are no further parents flag the last element
 			if (!element) {
 				prevElement.setAttribute("data-has-notes", "true");
@@ -186,7 +185,7 @@ class Footnotes extends Handler {
 			// Ingnore html element nodes, like mathml
 			if (!node.dataset) {
 				return;
-			} 
+			}
 
 			if (node.dataset.note === "footnote") {
 				notes = [node];
@@ -212,7 +211,7 @@ class Footnotes extends Handler {
 			let left = bounds.left;
 
 			if (left < right) {
-				// Add call for the note				
+				// Add call for the note
 				this.moveFootnote(currentNote, node.closest(".pagedjs_area"), true);
 			}
 		}
@@ -246,7 +245,7 @@ class Footnotes extends Handler {
 		}
 
 		// Add the note node
-		noteInnerContent.appendChild(node);		
+		noteInnerContent.appendChild(node);
 
 		// Add marker
 		node.dataset.footnoteMarker = node.dataset.ref;
@@ -267,7 +266,7 @@ class Footnotes extends Handler {
 		// Check element sizes
 		let noteCallBounds = noteCall && noteCall.getBoundingClientRect();
 		let noteAreaBounds = noteArea.getBoundingClientRect();
-	
+
 		// Get the @footnote margins
 		let noteContentMargins = this.totalMargins(noteContent);
 		let noteContentPadding = this.totalPadding(noteContent);
@@ -282,7 +281,7 @@ class Footnotes extends Handler {
 			// Get the correct line bottom for super or sub styled callouts
 			let prevSibling = noteCall.previousSibling;
 			let range = new Range();
-			if(prevSibling){
+			if (prevSibling) {
 				range.setStartBefore(prevSibling);
 			} else {
 				range.setStartBefore(noteCall);
@@ -298,18 +297,20 @@ class Footnotes extends Handler {
 				// Check that there is a previous element on the page
 				let parentParagraph = noteCall.closest("p").previousElementSibling;
 				if (parentParagraph) {
-					noteCallOffset = Math.ceil(parentParagraph.getBoundingClientRect().bottom);
+					noteCallOffset = Math.ceil(
+						parentParagraph.getBoundingClientRect().bottom
+					);
 				} else {
 					noteCallOffset = Math.ceil(rangeBounds.bottom);
 				}
 			}
 		}
 
-		let contentDelta = (height + total) - noteAreaBounds.height;
+		let contentDelta = height + total - noteAreaBounds.height;
 		// Space between the top of the footnotes area and the bottom of the footnote call
 		let noteDelta = noteCallPosition ? noteAreaBounds.top - noteCallPosition : 0;
 		// Space needed for the force a break for the policy of the footnote
-		let notePolicyDelta = noteCallPosition ? noteAreaBounds.top - noteCallOffset: 0;
+		let notePolicyDelta = noteCallPosition ? noteAreaBounds.top - noteCallOffset : 0;
 		let hasNotes = noteArea.querySelector("[data-note='footnote']");
 
 		if (needsNoteCall && noteCallBounds.left > right) {
@@ -325,14 +326,24 @@ class Footnotes extends Handler {
 			this.needsLayout.push(wrapperDiv);
 		} else if (!needsNoteCall) {
 			// Call was previously added, force adding footnote
-			pageArea.style.setProperty("--pagedjs-footnotes-height", `${height + noteContentMargins + noteContentBorders}px`);
+			pageArea.style.setProperty(
+				"--pagedjs-footnotes-height",
+				`${height + noteContentMargins + noteContentBorders}px`
+			);
 		} else if (noteCallPosition < noteAreaBounds.top - contentDelta) {
 			// the current note content will fit without pushing the call to the next page
-			pageArea.style.setProperty("--pagedjs-footnotes-height", `${height + noteContentMargins + noteContentBorders}px`);
+			pageArea.style.setProperty(
+				"--pagedjs-footnotes-height",
+				`${height + noteContentMargins + noteContentBorders}px`
+			);
 		} else {
 			// set height to just before note call
-			pageArea.style.setProperty("--pagedjs-footnotes-height", `${noteAreaBounds.height + notePolicyDelta}px`);
-			noteInnerContent.style.height = (noteAreaBounds.height + notePolicyDelta - total) + "px";
+			pageArea.style.setProperty(
+				"--pagedjs-footnotes-height",
+				`${noteAreaBounds.height + notePolicyDelta}px`
+			);
+			noteInnerContent.style.height =
+				noteAreaBounds.height + notePolicyDelta - total + "px";
 		}
 	}
 
@@ -342,7 +353,7 @@ class Footnotes extends Handler {
 		for (const className of node.classList) {
 			footnoteCall.classList.add(`${className}`);
 		}
-		
+
 		footnoteCall.dataset.footnoteCall = node.dataset.ref;
 		footnoteCall.dataset.ref = node.dataset.ref;
 
@@ -351,9 +362,9 @@ class Footnotes extends Handler {
 
 		// Add link
 		footnoteCall.href = `#note-${node.dataset.ref}`;
-		
+
 		parentElement.insertBefore(footnoteCall, node);
-		
+
 		return footnoteCall;
 	}
 
@@ -368,7 +379,6 @@ class Footnotes extends Handler {
 
 		noteInnerContent.style.columnWidth = Math.round(width) + "px";
 		noteInnerContent.style.columnGap = "calc(var(--pagedjs-margin-right) + var(--pagedjs-margin-left))";
-
 
 		// Get overflow
 		let layout = new Layout(noteArea);
@@ -387,12 +397,12 @@ class Footnotes extends Handler {
 			if (!startIsNode) {
 				let splitChild = extracted.firstElementChild;
 				splitChild.dataset.splitFrom = splitChild.dataset.ref;
-				
+
 				this.handleAlignment(noteInnerContent.lastElementChild);
 			}
 
 			this.needsLayout.push(extracted);
-			
+
 			noteContent.style.removeProperty("height");
 			noteInnerContent.style.removeProperty("height");
 
@@ -403,22 +413,28 @@ class Footnotes extends Handler {
 			let noteContentMargins = this.totalMargins(noteContent);
 			let noteContentPadding = this.totalPadding(noteContent);
 			let noteContentBorders = this.totalBorder(noteContent);
-			pageArea.style.setProperty("--pagedjs-footnotes-height", `${height + noteContentMargins + noteContentBorders + noteContentPadding}px`);
-
+			pageArea.style.setProperty(
+				"--pagedjs-footnotes-height",
+				`${height + noteContentMargins + noteContentBorders + noteContentPadding}px`
+			);
 
 			if (!breakToken) {
 				chunker.clonePage(page);
 			} else {
 				let breakBefore, previousBreakAfter;
-				if (breakToken.node &&
+				if (
+					breakToken.node &&
 					typeof breakToken.node.dataset !== "undefined" &&
-					typeof breakToken.node.dataset.previousBreakAfter !== "undefined") {
+					typeof breakToken.node.dataset.previousBreakAfter !== "undefined"
+				) {
 					previousBreakAfter = breakToken.node.dataset.previousBreakAfter;
 				}
 
-				if (breakToken.node &&
+				if (
+					breakToken.node &&
 					typeof breakToken.node.dataset !== "undefined" &&
-					typeof breakToken.node.dataset.breakBefore !== "undefined") {
+					typeof breakToken.node.dataset.breakBefore !== "undefined"
+				) {
 					breakBefore = breakToken.node.dataset.breakBefore;
 				}
 
@@ -426,7 +442,6 @@ class Footnotes extends Handler {
 					chunker.clonePage(page);
 				}
 			}
-
 		}
 		noteInnerContent.style.height = "auto";
 	}
@@ -446,8 +461,12 @@ class Footnotes extends Handler {
 		while (this.needsLayout.length) {
 			let fragment = this.needsLayout.shift();
 
-			Array.from(fragment.childNodes).forEach((node) => {				
-				this.moveFootnote(node, page.element.querySelector(".pagedjs_area"), false);
+			Array.from(fragment.childNodes).forEach((node) => {
+				this.moveFootnote(
+					node,
+					page.element.querySelector(".pagedjs_area"),
+					false
+				);
 			});
 		}
 	}
