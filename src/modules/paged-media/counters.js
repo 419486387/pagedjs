@@ -267,7 +267,7 @@ class Counters extends Handler {
 			this.styleSheet.insertRule(`[data-page-number="${pageElement.dataset.pageNumber}"] { counter-reset: page ${value} }`, this.styleSheet.cssRules.length);
 		});
 
-		let notereset = pageElement.querySelectorAll("[data-counter-footnote-reset]");
+		let notereset = pageElement.querySelectorAll("[data-counter-footnote-reset]:not([data-split-from])");
 		notereset.forEach((reset) => {
 			let value = reset.dataset.counterFootnoteReset;
 			this.styleSheet.insertRule(`[data-page-number="${pageElement.dataset.pageNumber}"] .pagedjs_area { counter-reset: footnote ${value} footnote-marker ${value} }`, this.styleSheet.cssRules.length);
