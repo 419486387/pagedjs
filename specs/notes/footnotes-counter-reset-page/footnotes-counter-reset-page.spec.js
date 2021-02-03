@@ -3,7 +3,7 @@ const TIMEOUT = 10000;
 describe("footnotes-counter-reset-page", () => {
 	let page;
 	beforeAll(async () => {
-		page = await loadPage("notes/footnotes/footnotes-counter-reset-page.html");
+		page = await loadPage("notes/footnotes-counter-reset-page/footnotes-counter-reset-page.html");
 		return page.rendered;
 	}, TIMEOUT);
 

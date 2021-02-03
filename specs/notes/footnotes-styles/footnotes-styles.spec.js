@@ -1,9 +1,9 @@
 const TIMEOUT = 10000;
 
-describe("footnotes", () => {
+describe("footnotes-styles", () => {
 	let page;
 	beforeAll(async () => {
-		page = await loadPage("notes/footnotes/footnotes-styles.html");
+		page = await loadPage("notes/footnotes-styles/footnotes-styles.html");
 		return page.rendered;
 	}, TIMEOUT);
 

@@ -1,9 +1,9 @@
 const TIMEOUT = 10000;
 
-describe("footnotes", () => {
+describe("footnotes-place", () => {
 	let page;
 	beforeAll(async () => {
-		page = await loadPage("notes/footnotes/footnotes.html");
+		page = await loadPage("notes/footnotes-place/footnotes-place.html");
 		return page.rendered;
 	}, TIMEOUT);
 
@@ -13,12 +13,12 @@ describe("footnotes", () => {
 		}
 	});
 
-	it("should render 14 pages", async () => {
+	it("should render 3 pages", async () => {
 		let pages = await page.$$eval(".pagedjs_page", (r) => {
 			return r.length;
 		});
 
-		expect(pages).toEqual(14);
+		expect(pages).toEqual(3);
 	});
 
 
@@ -26,9 +26,9 @@ describe("footnotes", () => {
 		it("should create a pdf", async () => {
 			let pdf = await page.pdf(PDF_SETTINGS);
 
+			expect(pdf).toMatchPDFSnapshot(1);
 			expect(pdf).toMatchPDFSnapshot(2);
 			expect(pdf).toMatchPDFSnapshot(3);
-			expect(pdf).toMatchPDFSnapshot(4);
 		});
 	}
 }

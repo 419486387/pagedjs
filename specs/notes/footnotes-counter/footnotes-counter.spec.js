@@ -13,12 +13,12 @@ describe("footnotes", () => {
 		}
 	});
 
-	it("should render 2 pages", async () => {
+	it("should render 14 pages", async () => {
 		let pages = await page.$$eval(".pagedjs_page", (r) => {
 			return r.length;
 		});
 
-		expect(pages).toEqual(2);
+		expect(pages).toEqual(14);
 	});
 
 

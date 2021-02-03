@@ -13,12 +13,12 @@ describe("footnote-policy", () => {
 		}
 	});
 
-	it("should render 14 pages", async () => {
+	it("should render 6 pages", async () => {
 		let pages = await page.$$eval(".pagedjs_page", (r) => {
 			return r.length;
 		});
 
-		expect(pages).toEqual(14);
+		expect(pages).toEqual(6);
 	});
 
 
