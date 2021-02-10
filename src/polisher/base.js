@@ -428,6 +428,10 @@ export default `
 	content: counter(footnote-marker) ". ";
 }
 
+.pagedjs_area .pagedjs_footnote_inner_content [data-note-display="inline"] {
+ 	display: inline;
+}
+
 .pagedjs_page {
 	counter-increment: page;
 	width: var(--pagedjs-width);
