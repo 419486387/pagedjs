@@ -408,6 +408,10 @@ export default `
 	}
 }
 
+.pagedjs_footnote_empty {
+	display: none;
+}
+
 .pagedjs_area [data-split-from] {
 	counter-increment: unset;
 	counter-reset: unset;

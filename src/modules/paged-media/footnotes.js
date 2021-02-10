@@ -247,6 +247,11 @@ class Footnotes extends Handler {
 		// Add the note node
 		noteInnerContent.appendChild(node);
 
+		// Remove empty class
+		if (noteContent.classList.contains("pagedjs_footnote_empty")) {
+			noteContent.classList.remove("pagedjs_footnote_empty");
+		}
+
 		// Add marker
 		node.dataset.footnoteMarker = node.dataset.ref;
 
@@ -418,6 +423,11 @@ class Footnotes extends Handler {
 				`${height + noteContentMargins + noteContentBorders + noteContentPadding}px`
 			);
 
+			// Hide footnote content if empty
+			if (noteInnerContent.childNodes.length === 0) {
+				noteContent.classList.add("pagedjs_footnote_empty");
+			}
+
 			if (!breakToken) {
 				chunker.clonePage(page);
 			} else {
@@ -482,8 +492,12 @@ class Footnotes extends Handler {
 			let call = removed.querySelector(`[data-footnote-call="${note.dataset.ref}"]`);
 			if (call) {
 				note.remove();
-				// noteInnerContent.style.height = (noteAreaBounds.height + notePolicyDelta - total) + "px";
 			}
+		}
+		// Hide footnote content if empty
+		let noteInnerContent = area.querySelector(".pagedjs_footnote_inner_content");
+		if (noteInnerContent && noteInnerContent.childNodes.length === 0) {
+			noteInnerContent.parentElement.classList.add("pagedjs_footnote_empty");
 		}
 	}
 
